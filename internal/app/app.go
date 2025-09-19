@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -11,10 +12,13 @@ import (
 func RunApp(args ...string) error {
 	filePath, options, err := p.ParseArgs(args[1:])
 	if err != nil {
-		return fmt.Errorf("sort:  %s\n", err)
+		return fmt.Errorf("sort: %s", err)
 	}
 	file, err := f.OpenFile(filePath)
 	if err != nil {
+		if errors.Is(err, p.ErrFileNotFound) {
+			return fmt.Errorf("sort: %w", err)
+		}
 		return err
 	}
 	defer func(file *os.File) {

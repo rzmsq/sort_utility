@@ -2,6 +2,8 @@ package file
 
 import (
 	"bufio"
+	"errors"
+	"fmt"
 	"os"
 	"sort"
 	"strings"
@@ -12,7 +14,10 @@ import (
 func OpenFile(filepath string) (*os.File, error) {
 	file, err := os.Open(filepath)
 	if err != nil {
-		return nil, err
+		if errors.Is(err, os.ErrNotExist) {
+			return nil, fmt.Errorf("cannot read: %s: %w", filepath, p.ErrFileNotFound)
+		}
+		return nil, fmt.Errorf("failed to open file %s: %w", filepath, err)
 	}
 	return file, nil
 }

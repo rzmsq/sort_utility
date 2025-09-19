@@ -1,8 +1,16 @@
 package args
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
+)
+
+var (
+	ErrMissingArgument = errors.New("option requires an argument")
+	ErrInvalidNumber   = errors.New("invalid number")
+	ErrUnknownOption   = errors.New("unknown option")
+	ErrFileNotFound    = errors.New("no such file or directory")
 )
 
 // KeySort Sort key
@@ -30,12 +38,12 @@ func ParseArgs(args []string) (string, *KeySort, error) {
 			// A separate case for parsing the k flag
 			if arg == "-k" {
 				if i+1 >= len(args) {
-					return "", nil, fmt.Errorf("option requires an argument -- k")
+					return "", nil, fmt.Errorf("%w -- k", ErrMissingArgument)
 				}
 
 				columnNum, err := strconv.Atoi(args[i+1])
 				if err != nil {
-					return "", nil, fmt.Errorf("invalid number: %s", args[i+1])
+					return "", nil, fmt.Errorf("%w: %s", ErrInvalidNumber, args[i+1])
 				}
 				options.SortByColumn = true
 				options.ColumnNumber = columnNum
@@ -49,7 +57,7 @@ func ParseArgs(args []string) (string, *KeySort, error) {
 		} else if filePath == "" {
 			filePath = arg
 		} else {
-			return "", nil, fmt.Errorf("cannot read: %s: No such file or directory", filePath)
+			return "", nil, fmt.Errorf("cannot read: %s: %w", filePath, ErrFileNotFound)
 		}
 	}
 	return filePath, options, nil
@@ -60,7 +68,7 @@ func parseFlag(keys string, optionSort *KeySort) error {
 	for _, key := range keys {
 		switch key {
 		case 'k':
-			return fmt.Errorf("option -k requires an argument")
+			return fmt.Errorf("-k %w", ErrMissingArgument)
 		case 'n':
 			optionSort.Numeric = true
 		case 'r':
@@ -76,7 +84,7 @@ func parseFlag(keys string, optionSort *KeySort) error {
 		case 'h':
 			optionSort.HumanNumeric = true
 		default:
-			return fmt.Errorf("unknown option: %c", key)
+			return fmt.Errorf("%w: %c", ErrUnknownOption, key)
 		}
 	}
 	return nil
