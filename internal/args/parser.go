@@ -7,15 +7,15 @@ import (
 
 // KeySort Sort key
 type KeySort struct {
-	columnNumber int  // Num for Sort by column
-	sortByColumn bool // Sort by column
-	numeric      bool // Sort by numeric value (strings are interpreted as numbers).
-	reverse      bool // Reverse the sense of comparison.
-	unique       bool // Do not output duplicate strings (only unique ones)
-	month        bool // Flag for comparison by month name
-	skipBlanks   bool // Skip leading blanks when finding end
-	isSorted     bool // Check if the data is sorted
-	humanNumeric bool // Flag for sorting by human-readable
+	ColumnNumber int  // Num for Sort by column
+	SortByColumn bool // Sort by column
+	Numeric      bool // Sort by numeric value (strings are interpreted as numbers).
+	Reverse      bool // Reverse the sense of comparison.
+	Unique       bool // Do not output duplicate strings (only unique ones)
+	Month        bool // Flag for comparison by month name
+	SkipBlanks   bool // Skip leading blanks when finding end
+	IsSorted     bool // Check if the data is sorted
+	HumanNumeric bool // Flag for sorting by human-readable
 }
 
 // ParseArgs Parsing flags and file name
@@ -37,8 +37,8 @@ func ParseArgs(args []string) (string, *KeySort, error) {
 				if err != nil {
 					return "", nil, fmt.Errorf("invalid number: %s", args[i+1])
 				}
-				options.sortByColumn = true
-				options.columnNumber = columnNum
+				options.SortByColumn = true
+				options.ColumnNumber = columnNum
 				i++
 			} else {
 				err := parseFlag(arg[1:], options)
@@ -62,19 +62,19 @@ func parseFlag(keys string, optionSort *KeySort) error {
 		case 'k':
 			return fmt.Errorf("option -k requires an argument")
 		case 'n':
-			optionSort.numeric = true
+			optionSort.Numeric = true
 		case 'r':
-			optionSort.reverse = true
+			optionSort.Reverse = true
 		case 'u':
-			optionSort.unique = true
+			optionSort.Unique = true
 		case 'M':
-			optionSort.month = true
+			optionSort.Month = true
 		case 'b':
-			optionSort.skipBlanks = true
+			optionSort.SkipBlanks = true
 		case 'c':
-			optionSort.isSorted = true
+			optionSort.IsSorted = true
 		case 'h':
-			optionSort.humanNumeric = true
+			optionSort.HumanNumeric = true
 		default:
 			return fmt.Errorf("unknown option: %c", key)
 		}

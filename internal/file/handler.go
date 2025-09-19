@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"os"
 	"sort"
+	"strings"
 
 	p "sort_utility/internal/args"
 )
@@ -28,6 +29,28 @@ func SortFile(file *os.File, options *p.KeySort) ([]string, error) {
 		return nil, err
 	}
 
-	sort.Strings(lines)
+	if options.SortByColumn == true {
+		sortByColumn(lines, options)
+	} else {
+		sort.Strings(lines)
+	}
+
 	return lines, nil
+}
+
+func sortByColumn(lines []string, options *p.KeySort) {
+	sort.Slice(lines, func(i, j int) bool {
+		fieldsI := strings.Fields(lines[i])
+		fieldsJ := strings.Fields(lines[j])
+
+		colIndex := options.ColumnNumber - 1
+		if colIndex >= len(fieldsI) || colIndex >= len(fieldsJ) {
+			return lines[i] < lines[j]
+		}
+
+		valueI := fieldsI[colIndex]
+		valueJ := fieldsJ[colIndex]
+
+		return valueI < valueJ
+	})
 }
