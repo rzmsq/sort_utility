@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"os"
 	"sort"
+
+	p "sort_utility/internal/args"
 )
 
 func OpenFile(filepath string) (*os.File, error) {
@@ -14,7 +16,7 @@ func OpenFile(filepath string) (*os.File, error) {
 	return file, nil
 }
 
-func SortFile(file *os.File) ([]string, error) {
+func SortFile(file *os.File, options *p.KeySort) ([]string, error) {
 	var lines []string
 	scanner := bufio.NewScanner(file)
 

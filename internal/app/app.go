@@ -9,7 +9,7 @@ import (
 )
 
 func RunApp(args ...string) error {
-	filePath, _, err := p.ParseArgs(args[1:])
+	filePath, options, err := p.ParseArgs(args[1:])
 	if err != nil {
 		return fmt.Errorf("sort:  %s\n", err)
 	}
@@ -24,7 +24,7 @@ func RunApp(args ...string) error {
 		}
 	}(file)
 
-	sortedLines, err := f.SortFile(file)
+	sortedLines, err := f.SortFile(file, options)
 	if err != nil {
 		return err
 	}
