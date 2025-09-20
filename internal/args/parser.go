@@ -42,7 +42,7 @@ func ParseArgs(args []string) (string, *KeySort, error) {
 				}
 
 				columnNum, err := strconv.Atoi(args[i+1])
-				if err != nil {
+				if err != nil || columnNum <= 0 {
 					return "", nil, fmt.Errorf("%w: %s", ErrInvalidNumber, args[i+1])
 				}
 				options.SortByColumn = true
@@ -60,7 +60,40 @@ func ParseArgs(args []string) (string, *KeySort, error) {
 			return "", nil, fmt.Errorf("cannot read: %s: %w", filePath, ErrFileNotFound)
 		}
 	}
+
+	if !options.SortByColumn {
+		options.SortByColumn = true
+		options.ColumnNumber = 1
+	}
+
+	if err := validateFlags(options); err != nil {
+		return "", nil, err
+	}
+
 	return filePath, options, nil
+}
+
+func validateFlags(options *KeySort) error {
+	sortFlags := 0
+	if options.Numeric {
+		sortFlags++
+	}
+	if options.Month {
+		sortFlags++
+	}
+	if options.HumanNumeric {
+		sortFlags++
+	}
+
+	if sortFlags > 1 {
+		return errors.New("conflicting sort options: only one of -n, -M, -h can be used")
+	}
+
+	if options.IsSorted && (options.Reverse || options.Unique) {
+		return errors.New("check mode (-c) cannot be used with -r or -u")
+	}
+
+	return nil
 }
 
 // parseFlag A simple function for setting flags in a KeySort structure
