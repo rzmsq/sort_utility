@@ -9,6 +9,7 @@ import (
 	f "sort_utility/internal/file"
 )
 
+// RunApp start app
 func RunApp(args ...string) error {
 	filePath, options, err := p.ParseArgs(args[1:])
 	if err != nil {

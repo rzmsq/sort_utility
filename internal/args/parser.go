@@ -6,11 +6,16 @@ import (
 	"strconv"
 )
 
+// Error variables for argument parsing
 var (
+	// ErrMissingArgument is returned when an option requires an argument but none is provided
 	ErrMissingArgument = errors.New("option requires an argument")
-	ErrInvalidNumber   = errors.New("invalid number")
-	ErrUnknownOption   = errors.New("unknown option")
-	ErrFileNotFound    = errors.New("no such file or directory")
+	// ErrInvalidNumber is returned when a provided argument is not a valid number
+	ErrInvalidNumber = errors.New("invalid number")
+	// ErrUnknownOption is returned when an unknown option is encountered
+	ErrUnknownOption = errors.New("unknown option")
+	// ErrFileNotFound is returned when the specified file does not exist
+	ErrFileNotFound = errors.New("no such file or directory")
 )
 
 // KeySort Sort key

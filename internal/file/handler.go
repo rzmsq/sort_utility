@@ -19,6 +19,10 @@ func writeMsg(str []byte) {
 	}
 }
 
+// OpenFile attempts to open the file at the given filepath
+// Returns the opened \*os.File and a nil error on success
+// If the file does not exist, returns a wrapped ErrFileNotFound error
+// For other errors, returns a wrapped error with context
 func OpenFile(filepath string) (*os.File, error) {
 	file, err := os.Open(filepath)
 	if err != nil {
@@ -30,6 +34,9 @@ func OpenFile(filepath string) (*os.File, error) {
 	return file, nil
 }
 
+// SortFile reads lines from the provided file and sorts them based on the given options
+// It supports checking if the file is already sorted, sorting by column, removing duplicates,
+// and reversing the result. Returns the sorted lines or an error
 func SortFile(file *os.File, options *p.KeySort) ([]string, error) {
 	var lines []string
 	scanner := bufio.NewScanner(file)
@@ -135,7 +142,7 @@ func sortByColumn(lines []string, options *p.KeySort) {
 		}
 
 		if options.Month {
-			compareMonth(valueI, valueJ)
+			return compareMonth(valueI, valueJ)
 		}
 
 		if options.HumanNumeric {
